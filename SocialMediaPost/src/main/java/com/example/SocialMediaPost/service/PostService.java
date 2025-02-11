@@ -13,6 +13,10 @@ public interface PostService {
 
     ResponseEntity<PostDto> createPost(Post post);
 
+    ResponseEntity<PostDto> updatePost(Long postId, PostDto postDto);
+
+    ResponseEntity<String> deletePost(Long postId);
+
     ResponseEntity<PostDto> getById(Long id);
 
     ResponseEntity<List<PostDto>> getAll();

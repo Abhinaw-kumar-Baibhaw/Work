@@ -1,0 +1,15 @@
+package com.example.SocialServiceRegistry;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+
+@SpringBootApplication
+@EnableEurekaServer
+public class SocialServiceRegistryApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SocialServiceRegistryApplication.class, args);
+	}
+
+}

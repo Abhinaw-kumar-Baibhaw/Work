@@ -19,17 +19,38 @@ public class PostController {
 
     @PostMapping("/create")
     public ResponseEntity<PostDto> createPost(@RequestBody Post post){
-       return postService.createPost(post);
+       PostDto createdPost = postService.createPost(post).getBody();
+       return ResponseEntity.status(201).body(createdPost);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<PostDto> updatePost(@PathVariable Long id, @RequestBody PostDto postUpdateDto) {
+       PostDto updatedPost = postService.updatePost(id, postUpdateDto).getBody();
+       return updatedPost != null ? ResponseEntity.ok(updatedPost) : ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable("id") Long id) {
+        boolean isDeleted = postService.deletePost(id).hasBody();
+        if (isDeleted) {
+            return ResponseEntity.ok("Post deleted successfully");
+        } else {
+            return ResponseEntity.status(404).body("Post not found"); // Not Found (404)
+        }
     }
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<PostDto> getById(@PathVariable("id") Long id){
-       return postService.getById(id);
+    public ResponseEntity<PostDto> getById(@PathVariable("id") Long id) {
+        PostDto postDto = postService.getById(id).getBody();
+        return postDto != null ? ResponseEntity.ok(postDto)
+                : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<PostDto>> getAll(){
-       return postService.getAll();
+    public ResponseEntity<List<PostDto>> getAll() {
+        List<PostDto> posts = postService.getAll().getBody();
+        return posts.isEmpty() ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(posts);
     }
 
 
@@ -54,8 +75,8 @@ public class PostController {
 
     @GetMapping("/LikeAndComment/{postId}")
     public ResponseEntity<Post> getTotalLikesAndCommentOnPost(@PathVariable("postId") Long postId) {
-        ResponseEntity<Post> response = postService.getTotalLikesAndCommentOnPost(postId);
-        return response;
+        Post response = postService.getTotalLikesAndCommentOnPost(postId).getBody();
+        return ResponseEntity.ok(response);
     }
 
 

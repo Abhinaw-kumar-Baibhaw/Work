@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CommentService {
 
-    Comment create(Comment comment);
+    ResponseEntity<Comment> create(Comment comment);
 
     ResponseEntity<List<Comment>> getById(Long postId);
 

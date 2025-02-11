@@ -17,12 +17,20 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/create")
-    public Comment create(@RequestBody Comment comment){
-      return commentService.create(comment);
+    public ResponseEntity<Comment> create(@RequestBody Comment comment) {
+        Comment createdComment = commentService.create(comment).getBody();
+        return ResponseEntity.status(201).body(createdComment);
     }
 
+
     @GetMapping("/getById/{postId}")
-    public ResponseEntity<List<Comment>> getById(@PathVariable("postId") Long postId){
-        return commentService.getById(postId);
+    public ResponseEntity<List<Comment>> getById(@PathVariable("postId") Long postId) {
+        List<Comment> comments = commentService.getById(postId).getBody();
+        if (comments.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(comments);
+        }
     }
+
 }
