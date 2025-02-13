@@ -18,14 +18,5 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @PostMapping("/like")
-    public ResponseEntity<String> createLikeNotification(@RequestParam Long postId, @RequestParam Long userId) {
-        try {
-            notificationService.createLikeNotification(postId, userId);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Like notification created successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create like notification: " + e.getMessage());
-        }
-    }
 }
 

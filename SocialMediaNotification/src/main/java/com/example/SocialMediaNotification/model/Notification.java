@@ -2,7 +2,6 @@ package com.example.SocialMediaNotification.model;
 
 import com.example.SocialMediaNotification.enums.NotificationType;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 
 @Entity
@@ -14,9 +13,7 @@ public class Notification {
 
     private Long userId;
 
-    private String message;
-
-    private LocalDateTime timestamp;
+    private Long postId;
 
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
@@ -25,11 +22,10 @@ public class Notification {
 
     }
 
-    public Notification(Long id, Long userId, String message, LocalDateTime timestamp, NotificationType notificationType) {
+    public Notification(Long id, Long userId, Long postId, NotificationType notificationType) {
         this.id = id;
         this.userId = userId;
-        this.message = message;
-        this.timestamp = timestamp;
+        this.postId = postId;
         this.notificationType = notificationType;
     }
 
@@ -49,20 +45,12 @@ public class Notification {
         this.userId = userId;
     }
 
-    public String getMessage() {
-        return message;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public NotificationType getNotificationType() {
@@ -78,8 +66,7 @@ public class Notification {
         return "Notification{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", message='" + message + '\'' +
-                ", timestamp=" + timestamp +
+                ", postId=" + postId +
                 ", notificationType=" + notificationType +
                 '}';
     }

@@ -1,21 +1,17 @@
 package com.example.SocialMediaNotification.dto;
 
 import com.example.SocialMediaNotification.enums.NotificationType;
-import java.time.LocalDateTime;
+
 
 
 public class NotificationDto {
-
 
     private Long id;
 
     private Long userId;
 
-    private String message;
+    private Long postId;
 
-    private boolean read;
-
-    private LocalDateTime timestamp;
 
     private NotificationType notificationType;
 
@@ -23,12 +19,10 @@ public class NotificationDto {
 
     }
 
-    public NotificationDto(Long id, Long userId, String message, boolean read, LocalDateTime timestamp, NotificationType notificationType) {
+    public NotificationDto(Long id, Long userId, Long postId, NotificationType notificationType) {
         this.id = id;
         this.userId = userId;
-        this.message = message;
-        this.read = read;
-        this.timestamp = timestamp;
+        this.postId = postId;
         this.notificationType = notificationType;
     }
 
@@ -48,28 +42,12 @@ public class NotificationDto {
         this.userId = userId;
     }
 
-    public String getMessage() {
-        return message;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public NotificationType getNotificationType() {

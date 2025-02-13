@@ -5,6 +5,7 @@ import com.example.SocialMediaLike.service.LikesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,7 +27,6 @@ public class LikesController {
         }
         Likes createdLike = likesService.create(likes).getBody();
         if (createdLike != null) {
-//            notificationService.createLikeNotification(likes.getPostId(), likes.getUserId());
             return ResponseEntity.status(HttpStatus.CREATED).body(createdLike);
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
