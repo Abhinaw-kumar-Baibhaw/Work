@@ -18,15 +18,19 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
 
+    @Column(name = "notified_time")
+    private Long notifiedTime;
+
     public Notification(){
 
     }
 
-    public Notification(Long id, Long userId, Long postId, NotificationType notificationType) {
+    public Notification(Long id, Long userId, Long postId, NotificationType notificationType, Long notifiedTime) {
         this.id = id;
         this.userId = userId;
         this.postId = postId;
         this.notificationType = notificationType;
+        this.notifiedTime = notifiedTime;
     }
 
     public Long getId() {
@@ -61,6 +65,14 @@ public class Notification {
         this.notificationType = notificationType;
     }
 
+    public Long getNotifiedTime() {
+        return notifiedTime;
+    }
+
+    public void setNotifiedTime(Long notifiedTime) {
+        this.notifiedTime = notifiedTime;
+    }
+
     @Override
     public String toString() {
         return "Notification{" +
@@ -68,6 +80,7 @@ public class Notification {
                 ", userId=" + userId +
                 ", postId=" + postId +
                 ", notificationType=" + notificationType +
+                ", notifiedTime=" + notifiedTime +
                 '}';
     }
 }

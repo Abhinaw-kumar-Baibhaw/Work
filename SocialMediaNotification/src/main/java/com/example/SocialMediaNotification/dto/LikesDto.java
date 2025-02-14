@@ -1,4 +1,4 @@
-package com.example.SocialMediaLike.Dto;
+package com.example.SocialMediaNotification.dto;
 
 
 public class LikesDto {
