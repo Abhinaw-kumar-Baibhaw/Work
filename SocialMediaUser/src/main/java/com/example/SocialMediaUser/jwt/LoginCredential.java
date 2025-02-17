@@ -2,14 +2,14 @@ package com.example.SocialMediaUser.jwt;
 
 import com.example.SocialMediaUser.model.Users;
 import com.example.SocialMediaUser.repo.UsersRepo;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -25,14 +25,41 @@ public class LoginCredential {
     @Autowired
     private JwtService jwtService;
 
-
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody Users user) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-        String email = user.getEmail();
-        Users user1 = usersRepo.findByEmail(email);
-        String role =  user1.getRole();
-        String token = jwtService.generateToken(email, role);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<?> authenticateUser(@RequestBody Users user, HttpSession session) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+            );
+            String email = user.getEmail();
+            Users authenticatedUser = usersRepo.findByEmail(email);
+            if (authenticatedUser != null) {
+                session.setAttribute("user", authenticatedUser);
+                String role = authenticatedUser.getRole();
+                String token = jwtService.generateToken(email, role);
+                return ResponseEntity.ok(new LoginResponse(token, authenticatedUser));
+            }
+            return ResponseEntity.status(401).body("Invalid credentials");
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(401).body("Invalid credentials");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("An error occurred during authentication");
+        }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok("Logged out successfully.");
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile(HttpSession session) {
+        Users user = (Users) session.getAttribute("user");
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.status(401).body("No active session found. Please log in.");
+    }
+
 }

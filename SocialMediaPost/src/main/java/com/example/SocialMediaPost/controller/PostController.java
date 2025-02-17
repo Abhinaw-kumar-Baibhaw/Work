@@ -7,6 +7,7 @@ import com.example.SocialMediaPost.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -74,6 +75,7 @@ public class PostController {
     }
 
     @GetMapping("/LikeAndComment/{postId}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Post> getTotalLikesAndCommentOnPost(@PathVariable("postId") Long postId) {
         Post response = postService.getTotalLikesAndCommentOnPost(postId).getBody();
         return ResponseEntity.ok(response);

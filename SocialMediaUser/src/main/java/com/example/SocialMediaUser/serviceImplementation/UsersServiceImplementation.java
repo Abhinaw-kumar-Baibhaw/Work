@@ -4,11 +4,12 @@ import com.example.SocialMediaUser.dto.UserDTO;
 import com.example.SocialMediaUser.model.Users;
 import com.example.SocialMediaUser.repo.UsersRepo;
 import com.example.SocialMediaUser.service.UsersService;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,6 +26,9 @@ public class UsersServiceImplementation implements UsersService {
 
     @Autowired
     private UsersRepo usersRepo;
+
+    @Autowired
+    private HttpSession session;
 
     private UserDTO convertToDTO(Users users) {
         return new UserDTO(users.getId(), users.getName(), users.getEmail(), users.getRole());
@@ -66,5 +70,22 @@ public class UsersServiceImplementation implements UsersService {
             logger.error("User not found with ID: {}", id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+
+    public void trackSession(Users authenticatedUser) {
+        logger.info("Tracking session for user with email: {}", authenticatedUser.getEmail());
+        session.setAttribute("user", authenticatedUser); // Store the user object in the session
+    }
+
+
+    public Users getUserFromSession() {
+        return (Users) session.getAttribute("user");
+    }
+
+
+    public void invalidateSession() {
+        session.invalidate();
+        logger.info("User session invalidated.");
     }
 }
