@@ -14,10 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Service
 public class UsersServiceImplementation implements UsersService {
@@ -75,7 +75,7 @@ public class UsersServiceImplementation implements UsersService {
 
     public void trackSession(Users authenticatedUser) {
         logger.info("Tracking session for user with email: {}", authenticatedUser.getEmail());
-        session.setAttribute("user", authenticatedUser); // Store the user object in the session
+        session.setAttribute("user", authenticatedUser);
     }
 
 

@@ -104,12 +104,12 @@ public class PostServiceImplementation implements PostService {
 
 
     @Override
-    @Cacheable(value = "postLikes", key = "#postId1", unless = "#result.isEmpty()")
+    @Cacheable(value = "postLikes", key = "#postId1")
     public ResponseEntity<List<Post>> getTotalLikesOnPost(Long postId1) {
         logger.info("Fetching total likes for post with ID: {}", postId1);
         List<Post> posts = postRepo.findByUserId(postId1);
         for (Post post : posts) {
-            String likeServiceUrl = "http://SOCIALMEDIALIKE/likes/count/" + post.getId();
+            String likeServiceUrl = "http://SOCIALMEDIALIKE/likes/count/" + postId1;
             Long likeCount = restTemplate.getForObject(likeServiceUrl, Long.class);
             post.setLikeCount(likeCount);
             logger.debug("Post ID: {} has {} likes", post.getId(), likeCount);

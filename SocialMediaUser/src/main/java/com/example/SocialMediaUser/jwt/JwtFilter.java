@@ -27,6 +27,13 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        String gatewayHeader = request.getHeader("X-Gateway-Request");
+        if (gatewayHeader == null || !gatewayHeader.equals("true")) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // Deny direct access
+            response.getWriter().write("Access Denied: Request must come from API Gateway");
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
