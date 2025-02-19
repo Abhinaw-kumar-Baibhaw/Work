@@ -47,7 +47,7 @@ public class PostServiceImplementation implements PostService {
     }
 
     @Override
-    @CacheEvict(value = "post", key = "#postId")
+//    @CacheEvict(value = "post", key = "#postId")
     public ResponseEntity<PostDto> updatePost(Long postId, PostDto postDto) {
         logger.info("Updating post with ID: {}", postId);
         Optional<Post> existingPost = postRepo.findById(postId);
@@ -66,7 +66,7 @@ public class PostServiceImplementation implements PostService {
     }
 
     @Override
-    @CacheEvict(value = "post", key = "#postId")
+//    @CacheEvict(value = "post", key = "#postId")
     public ResponseEntity<String> deletePost(Long postId) {
         Optional<Post> postOptional = postRepo.findById(postId);
         if (postOptional.isPresent()) {
@@ -80,7 +80,7 @@ public class PostServiceImplementation implements PostService {
     }
 
     @Override
-    @Cacheable(value = "post", key = "#id", unless = "#result == null")
+//    @Cacheable(value = "post", key = "#id", unless = "#result == null")
     public ResponseEntity<PostDto> getById(Long id) {
         logger.info("Fetching post with ID: {}", id);
         Optional<Post> post = postRepo.findById(id);
@@ -104,7 +104,7 @@ public class PostServiceImplementation implements PostService {
 
 
     @Override
-    @Cacheable(value = "postLikes", key = "#postId1")
+//    @Cacheable(value = "postLikes", key = "#postId1")
     public ResponseEntity<List<Post>> getTotalLikesOnPost(Long postId1) {
         logger.info("Fetching total likes for post with ID: {}", postId1);
         List<Post> posts = postRepo.findByUserId(postId1);
@@ -119,7 +119,7 @@ public class PostServiceImplementation implements PostService {
     }
 
     @Override
-    @Cacheable(value = "postComments", key = "#postId", unless = "#result.isEmpty()")
+//    @Cacheable(value = "postComments", key = "#postId", unless = "#result.isEmpty()")
     public ResponseEntity<List<Post>> getTotalCommentOnPost(Long postId) {
         logger.info("Fetching total comments for post with ID: {}", postId);
         List<Post> posts = postRepo.findByUserId(postId);
@@ -133,7 +133,7 @@ public class PostServiceImplementation implements PostService {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @Cacheable(value = "likesAndComments",key = "#postId")
+//    @Cacheable(value = "likesAndComments",key = "#postId")
     public ResponseEntity<Post> getTotalLikesAndCommentOnPost(Long postId) {
         logger.info("Fetching total likes and comments for post with ID: {}", postId);
         Post post = postRepo.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post not found"));

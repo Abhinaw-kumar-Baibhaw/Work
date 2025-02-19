@@ -75,7 +75,6 @@ public class PostController {
     }
 
     @GetMapping("/LikeAndComment/{postId}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Post> getTotalLikesAndCommentOnPost(@PathVariable("postId") Long postId) {
         Post response = postService.getTotalLikesAndCommentOnPost(postId).getBody();
         return ResponseEntity.ok(response);
