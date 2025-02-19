@@ -17,8 +17,8 @@ public class ApiGatewayConfig {
 
                 .route("user-service", r -> r.path("/users/**")
                         .filters(f -> f
-                                .addRequestHeader("X-Gateway-Request", "true") // Custom header
-                                .filter((exchange, chain) -> modifyRequestHeaders(exchange, chain))
+                                .addRequestHeader("X-Gateway-Request", "true")
+                                .filter(this::modifyRequestHeaders)
                         )
                         .uri("lb://SOCIALMEDIAUSER")
                 )
@@ -26,7 +26,7 @@ public class ApiGatewayConfig {
                 .route("likes-service", r -> r.path("/likes/**")
                         .filters(f -> f
                                 .addRequestHeader("X-Gateway-Request", "true")
-                                .filter((exchange, chain) -> modifyRequestHeaders(exchange, chain))
+                                .filter(this::modifyRequestHeaders)
                         )
                         .uri("lb://SOCIALMEDIALIKE")
                 )
@@ -34,7 +34,7 @@ public class ApiGatewayConfig {
                 .route("notifications-service", r -> r.path("/notifications/**")
                         .filters(f -> f
                                 .addRequestHeader("X-Gateway-Request", "true")
-                                .filter((exchange, chain) -> modifyRequestHeaders(exchange, chain))
+                                .filter(this::modifyRequestHeaders)
                         )
                         .uri("lb://SOCIALMEDIANOTIFICATION")
                 )
@@ -42,7 +42,7 @@ public class ApiGatewayConfig {
                 .route("post-service", r -> r.path("/posts/**")
                         .filters(f -> f
                                 .addRequestHeader("X-Gateway-Request", "true")
-                                .filter((exchange, chain) -> modifyRequestHeaders(exchange, chain))
+                                .filter(this::modifyRequestHeaders)
                         )
                         .uri("lb://SOCIALMEDIAPOST")
                 )
@@ -50,23 +50,26 @@ public class ApiGatewayConfig {
                 .route("comment-service", r -> r.path("/comment/**")
                         .filters(f -> f
                                 .addRequestHeader("X-Gateway-Request", "true")
-                                .filter((exchange, chain) -> modifyRequestHeaders(exchange, chain))
+                                .filter(this::modifyRequestHeaders)
                         )
                         .uri("lb://SOCIALMEDIACOMMENT")
                 )
-
                 .build();
     }
 
     private Mono<Void> modifyRequestHeaders(ServerWebExchange exchange, GatewayFilterChain chain) {
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
+        String gatewayHeader = exchange.getRequest().getHeaders().getFirst("X-Gateway-Request");
+        System.out.println("Authorization header: " + authHeader);
+        System.out.println("X-Gateway-Request header: " + gatewayHeader);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             exchange = exchange.mutate()
                     .request(r -> r.header("Authorization", authHeader))
                     .build();
         } else {
-            return Mono.error(new RuntimeException("Authorization header missing or invalid"));
+            return Mono.error(new IllegalArgumentException("Authorization header missing or invalid"));
         }
         return chain.filter(exchange);
     }
+
 }

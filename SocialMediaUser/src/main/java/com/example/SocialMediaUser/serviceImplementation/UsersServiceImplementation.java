@@ -35,7 +35,7 @@ public class UsersServiceImplementation implements UsersService {
     }
 
     @Override
-    @CacheEvict(value = "usersCache", allEntries = true)
+//    @CacheEvict(value = "usersCache", allEntries = true)
     public ResponseEntity<UserDTO> createUser(Users users) {
         logger.info("Creating a new user with email: {}", users.getEmail());
         String password = users.getPassword();
@@ -47,7 +47,7 @@ public class UsersServiceImplementation implements UsersService {
     }
 
     @Override
-    @Cacheable(value = "usersCache")
+//    @Cacheable(value = "usersCache")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         logger.info("Fetching all users from the database");
         List<Users> usersList = usersRepo.findAll();
@@ -59,7 +59,7 @@ public class UsersServiceImplementation implements UsersService {
     }
 
     @Override
-    @Cacheable(value = "userCache", key = "#id")
+//    @Cacheable(value = "userCache", key = "#id")
     public ResponseEntity<UserDTO> findById(Long id) {
         logger.info("Fetching user with ID: {}", id);
         Optional<Users> user = usersRepo.findById(id);
