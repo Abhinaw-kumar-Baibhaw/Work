@@ -50,7 +50,7 @@ public class    Config {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**")
+                        .requestMatchers("/auth/**","/users/**","/posts/**","/notifications/**","/comment/**","/follows/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
