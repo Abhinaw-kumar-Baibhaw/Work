@@ -2,14 +2,12 @@ package com.example.SocialMediaFollow.dto;
 
 import com.example.SocialMediaFollow.model.Users;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
-
-
-
 
 public class FollowDto {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long followerId;
@@ -21,16 +19,18 @@ public class FollowDto {
     @Transient
     private Users users;
 
-    public FollowDto(){
+    private int followerCount;
 
+    public FollowDto() {
     }
 
-    public FollowDto(Long id, Long followerId, Long followedId, LocalDateTime createdAt, Users users) {
+    public FollowDto(Long id, Long followerId, Long followedId, LocalDateTime createdAt, Users users, int followerCount) {
         this.id = id;
         this.followerId = followerId;
         this.followedId = followedId;
         this.createdAt = createdAt;
         this.users = users;
+        this.followerCount = followerCount;
     }
 
     public Long getId() {
@@ -71,6 +71,14 @@ public class FollowDto {
 
     public void setUsers(Users users) {
         this.users = users;
+    }
+
+    public int getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(int followerCount) {
+        this.followerCount = followerCount;
     }
 
 

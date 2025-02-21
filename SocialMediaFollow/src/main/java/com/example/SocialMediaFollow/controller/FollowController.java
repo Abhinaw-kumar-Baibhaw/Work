@@ -32,4 +32,9 @@ public class FollowController {
     public ResponseEntity<List<FollowDto>> getFollowing(@PathVariable Long followerId) {
         return followService.getFollowing(followerId);
     }
+
+    @DeleteMapping("/unfollow/{followerId}/{followedId}")
+    public ResponseEntity<FollowDto> unfollow(@PathVariable Long followerId, @PathVariable Long followedId) {
+        return followService.unfollow(followerId, followedId);
+    }
 }

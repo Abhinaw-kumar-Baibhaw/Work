@@ -1,10 +1,7 @@
 package com.example.SocialMediaFollow.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
-
-
 
 @Entity
 @Table(name = "follow")
@@ -23,16 +20,18 @@ public class Follow {
     @Transient
     private Users users;
 
-    public Follow(){
+    private int followerCount;
 
+    public Follow() {
     }
 
-    public Follow(Long id, Long followerId, Long followedId, LocalDateTime createdAt, Users users) {
+    public Follow(Long id, Long followerId, Long followedId, LocalDateTime createdAt, Users users, int followerCount) {
         this.id = id;
         this.followerId = followerId;
         this.followedId = followedId;
         this.createdAt = createdAt;
         this.users = users;
+        this.followerCount = followerCount;
     }
 
     public Long getId() {
@@ -75,6 +74,14 @@ public class Follow {
         this.users = users;
     }
 
+    public int getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(int followerCount) {
+        this.followerCount = followerCount;
+    }
+
     @Override
     public String toString() {
         return "FollowDto{" +
@@ -83,6 +90,7 @@ public class Follow {
                 ", followedId=" + followedId +
                 ", createdAt=" + createdAt +
                 ", users=" + users +
+                ", followerCount=" + followerCount +
                 '}';
     }
 }

@@ -10,7 +10,7 @@ public interface FollowService {
 
     ResponseEntity<FollowDto> follow(Follow follow);
 
-    ResponseEntity<FollowDto> unfollow(String follower);
+    ResponseEntity<FollowDto> unfollow(Long followerId, Long followedId);
 
     ResponseEntity<List<FollowDto>> getFollowers(Long followedId);
 

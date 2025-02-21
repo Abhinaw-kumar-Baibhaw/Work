@@ -12,4 +12,7 @@ public interface FollowRepo extends JpaRepository<Follow,Long> {
 
     List<Follow> findByFollowerId(Long followerId);
 
+    Follow findByFollowerIdAndFollowedId(Long followerId, Long followedId);
+
+    List<Follow> findByFollowedIdOrderByCreatedAtDesc(Long followedId);
 }
