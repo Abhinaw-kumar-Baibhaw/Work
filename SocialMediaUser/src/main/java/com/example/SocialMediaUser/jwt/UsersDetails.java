@@ -1,5 +1,6 @@
-package com.example.SocialMediaUser.model;
+package com.example.SocialMediaUser.jwt;
 
+import com.example.SocialMediaUser.model.Users;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

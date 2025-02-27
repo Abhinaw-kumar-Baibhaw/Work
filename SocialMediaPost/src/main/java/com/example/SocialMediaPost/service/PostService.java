@@ -1,13 +1,10 @@
 package com.example.SocialMediaPost.service;
 
-import com.example.SocialMediaPost.dto.Comment;
 import com.example.SocialMediaPost.dto.PostDto;
-import com.example.SocialMediaPost.dto.Users;
 import com.example.SocialMediaPost.model.Post;
 import org.springframework.http.ResponseEntity;
-
 import java.util.List;
-import java.util.Optional;
+
 
 public interface PostService {
 

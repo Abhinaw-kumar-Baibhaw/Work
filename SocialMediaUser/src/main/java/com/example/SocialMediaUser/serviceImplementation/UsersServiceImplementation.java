@@ -8,8 +8,6 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -70,6 +68,22 @@ public class UsersServiceImplementation implements UsersService {
             logger.error("User not found with ID: {}", id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @Override
+    public List<Users> searchByEmail(String email) {
+        logger.info("Searching for users with email containing: {}", email);
+        return usersRepo.findByEmailContaining(email);
+    }
+
+    @Override
+    public List<Users> searchByName(String name) {
+        return usersRepo.findByName(name);
+    }
+
+    @Override
+    public List<Users> searchByRole(String role) {
+        return usersRepo.findByRole(role);
     }
 
 

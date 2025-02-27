@@ -48,4 +48,31 @@ public class UsersController {
         }
         return response;
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Users>> searchByEmail(@RequestParam String email) {
+        List<Users> users = usersService.searchByEmail(email);
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/searchByName")
+    public ResponseEntity<List<Users>> searchByName(@RequestParam String searchByName) {
+        List<Users> users = usersService.searchByName(searchByName);
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/searchByRole")
+    public ResponseEntity<List<Users>> searchByRole(@RequestParam String role) {
+        List<Users> users = usersService.searchByRole(role);
+        if (users.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(users);
+    }
 }

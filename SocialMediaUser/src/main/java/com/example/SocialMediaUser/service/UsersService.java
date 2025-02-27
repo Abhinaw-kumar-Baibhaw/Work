@@ -14,4 +14,13 @@ public interface UsersService {
     ResponseEntity<List<UserDTO>> getAllUsers();
 
     ResponseEntity<UserDTO> findById(Long id);
+
+    List<Users> searchByEmail(String email);
+
+    List<Users> searchByName(String name);
+
+    List<Users> searchByRole(String role);
+
+
+
 }

@@ -1,7 +1,6 @@
 package com.example.SocialMediaUser.jwt;
 
 import com.example.SocialMediaUser.model.Users;
-import com.example.SocialMediaUser.model.UsersDetails;
 import com.example.SocialMediaUser.repo.UsersRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
