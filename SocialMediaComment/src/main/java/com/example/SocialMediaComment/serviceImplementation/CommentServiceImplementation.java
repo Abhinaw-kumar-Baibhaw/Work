@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,10 +21,15 @@ public class CommentServiceImplementation implements CommentService {
     @Autowired
     private CommentRepo commentRepo;
 
+    @Autowired
+    private KafkaTemplate<String,String> kafkaTemplate;
+
     @Override
     public ResponseEntity<Comment> create(Comment comment) {
         logger.info("Creating a new comment for post ID: {}", comment.getPostId());
         Comment savedComment = commentRepo.save(comment);
+        String message = comment.getUserId() +" commented on you post";
+        kafkaTemplate.send("comment-topic",message);
         logger.info("Comment created successfully with ID: {}", savedComment.getId());
         return ResponseEntity.status(201).body(savedComment);
     }

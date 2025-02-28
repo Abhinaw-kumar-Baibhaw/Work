@@ -9,6 +9,7 @@ import com.example.SocialMediaFollow.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,6 +25,9 @@ public class FollowServiceImplementation implements FollowService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private KafkaTemplate<String , String> kafkaTemplate;
 
     private FollowDto convertToDto(Follow follow) {
         List<Follow> follows = followRepo.findByFollowedIdOrderByCreatedAtDesc(follow.getFollowedId());
@@ -63,6 +67,8 @@ public class FollowServiceImplementation implements FollowService {
         }
         follow.setFollowerCount(followerCount + 1);
         Follow savedFollow = followRepo.save(follow);
+        String message = follow.getFollowerId() +" followed you";
+        kafkaTemplate.send("follow-topic",message);
         FollowDto followDto = convertToDto(savedFollow);
         return new ResponseEntity<>(followDto, HttpStatus.CREATED);
     }

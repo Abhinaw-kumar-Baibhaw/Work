@@ -16,7 +16,7 @@ public class Users {
 
     private String role;
 
-    Users(){
+   public Users(){
 
     }
 

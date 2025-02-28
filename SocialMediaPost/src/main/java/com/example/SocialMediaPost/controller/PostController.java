@@ -4,6 +4,7 @@ package com.example.SocialMediaPost.controller;
 import com.example.SocialMediaPost.dto.PostDto;
 import com.example.SocialMediaPost.model.Post;
 import com.example.SocialMediaPost.service.PostService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class PostController {
     private PostService postService;
 
     @PostMapping("/create")
-    public ResponseEntity<PostDto> createPost(@RequestBody Post post){
+    public ResponseEntity<PostDto> createPost(@RequestBody Post post) throws JsonProcessingException {
        PostDto createdPost = postService.createPost(post).getBody();
        return ResponseEntity.status(201).body(createdPost);
     }

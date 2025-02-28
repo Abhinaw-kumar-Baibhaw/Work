@@ -7,6 +7,8 @@ import com.example.SocialMediaPost.exceptions.ResourceNotFoundException;
 import com.example.SocialMediaPost.model.Post;
 import com.example.SocialMediaPost.repo.PostRepo;
 import com.example.SocialMediaPost.service.PostService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
@@ -34,14 +37,26 @@ public class PostServiceImplementation implements PostService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+
     private PostDto convertToDto(Post post){
         return new PostDto(post.getId(), post.getContent(), post.getImageUrl(), post.getUserId(), post.getTimestampCreated(), post.getTimestampUpdated(),post.getUser(),post.getLikeCount(),post.getCommentCount());
     }
 
     @Override
-    public ResponseEntity<PostDto> createPost(Post post) {
+    public ResponseEntity<PostDto> createPost(Post post) throws JsonProcessingException {
         logger.info("Creating post with user ID: {}", post.getUserId());
         Post savedPost = postRepo.save(post);
+        PostDto postDto = convertToDto(post);
+        post.setUserId(postDto.getUserId());
+        post.setTimestampCreated(System.currentTimeMillis());
+        Post savePost = postRepo.save(post);
+        PostDto postDto1 = convertToDto(savePost);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonMessage = objectMapper.writeValueAsString(postDto1);
+        kafkaTemplate.send("post-topic",jsonMessage);
         logger.info("Post created successfully with ID: {}", savedPost.getId());
         return new ResponseEntity<>(convertToDto(savedPost), HttpStatus.CREATED);
     }

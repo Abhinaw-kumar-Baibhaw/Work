@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,17 +52,21 @@ public class MessageServiceImplementation implements MessageService {
 
     @Override
     public ResponseEntity<List<MessageDto>> getInfo(Long senderId) {
-        String url = "http://SOCIALMEDIAUSER/user/getById/" + senderId;
+        String url = "http://SOCIALMEDIAUSER/users/getById/" + senderId;
         Users user = restTemplate.getForObject(url, Users.class);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<Message> messages = messageRepo.findBySender(user);
+        List<Message> messages = messageRepo.findBySenderId(senderId);
+        if (messages == null || messages.isEmpty()) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
         List<MessageDto> messageDtos = messages.stream()
                 .map(message -> new MessageDto(message))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(messageDtos, HttpStatus.OK);
     }
+
 
 
 }
