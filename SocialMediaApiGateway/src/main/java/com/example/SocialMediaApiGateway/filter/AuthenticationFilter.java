@@ -1,6 +1,8 @@
 package com.example.SocialMediaApiGateway.filter;
 
 import com.example.SocialMediaApiGateway.config.JwtUtil;
+import com.example.SocialMediaApiGateway.service.EmailOtpService;
+import com.example.SocialMediaApiGateway.service.OtpCacheService;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -9,7 +11,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.logging.Logger;
-
 
 @Component
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
@@ -22,10 +23,15 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private EmailOtpService emailOtpService;
+
+    @Autowired
+    private OtpCacheService otpCacheService;
+
     public AuthenticationFilter() {
         super(Config.class);
     }
-
 
     @Override
     public GatewayFilter apply(Config config) {
@@ -50,11 +56,25 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     logger.severe("Invalid Token: " + e.getMessage());
                     return Mono.error(new RuntimeException("Invalid Token"));
                 }
+
+                String userEmail = jwtUtil.extractUserName(authHeader);
+                String otp = exchange.getRequest().getHeaders().getFirst("OTP");
+
+                if (otp == null) {
+                    String generatedOtp = emailOtpService.generateOtp();
+                    emailOtpService.sendOtp(userEmail, generatedOtp);
+                    return Mono.error(new RuntimeException("OTP required. Please check your email."));
+                }
+
+                 String storedOtp = otpCacheService.getOtp(userEmail);
+                 if (!storedOtp.equals(otp)) {
+                     return Mono.error(new RuntimeException("Invalid OTP"));
+                 }
             }
             return chain.filter(exchange);
         };
     }
-    public static class Config {
 
+    public static class Config {
     }
 }
