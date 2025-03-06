@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class OtpCacheService {
 
     private final Cache<String, String> otpCache = CacheBuilder.newBuilder()
-            .expireAfterWrite(5, TimeUnit.MINUTES) // OTP expires in 5 minutes
+            .expireAfterWrite(5, TimeUnit.MINUTES)
             .build();
 
     public void storeOtp(String email, String otp) {

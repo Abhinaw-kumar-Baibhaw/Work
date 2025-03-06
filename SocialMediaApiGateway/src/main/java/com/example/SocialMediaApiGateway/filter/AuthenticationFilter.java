@@ -9,8 +9,8 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
 import java.util.logging.Logger;
+
 
 @Component
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
@@ -37,14 +37,17 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             if (validator.isSecured.test(exchange.getRequest())) {
+
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                     logger.warning("Missing Authorization header in request: " + exchange.getRequest().getURI());
                     return Mono.error(new RuntimeException("Missing Authorization header"));
                 }
+
                 String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
                 logger.info("Forwarded Authorization Header: " + authHeader);
+
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                    authHeader = authHeader.substring(7);
+                    authHeader = authHeader.substring(7); // Extract the token
                 } else {
                     logger.warning("Authorization header does not start with 'Bearer '");
                     return Mono.error(new RuntimeException("Authorization header must start with 'Bearer '"));
@@ -62,19 +65,22 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                 if (otp == null) {
                     String generatedOtp = emailOtpService.generateOtp();
-                    emailOtpService.sendOtp(userEmail, generatedOtp);
-                    return Mono.error(new RuntimeException("OTP required. Please check your email."));
+                    emailOtpService.sendEmail(userEmail, generatedOtp, "");
+                    otpCacheService.storeOtp(userEmail, generatedOtp);
+                    return Mono.error(new RuntimeException("OTP required. Please check your email.")); // Notify the user to check email
                 }
-
-                 String storedOtp = otpCacheService.getOtp(userEmail);
-                 if (!storedOtp.equals(otp)) {
-                     return Mono.error(new RuntimeException("Invalid OTP"));
-                 }
+                String storedOtp = otpCacheService.getOtp(userEmail);
+                if (storedOtp == null) {
+                    return Mono.error(new RuntimeException("OTP has expired or was never generated. Please request a new OTP."));
+                }
+                if (!storedOtp.equals(otp)) {
+                    return Mono.error(new RuntimeException("Invalid OTP"));
+                }
             }
             return chain.filter(exchange);
         };
     }
-
     public static class Config {
     }
 }
+
