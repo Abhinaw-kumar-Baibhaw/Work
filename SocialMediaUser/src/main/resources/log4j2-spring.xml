@@ -9,11 +9,11 @@
 
         <SplunkHttp name="SOCIALMEDIAUSER"
                     url="http://localhost:8088"
-                    token="c75d5d47-eb4a-4022-92a2-67c247d775cb"
+                    token=""
                     host="localhost"
-                    index="social_media_user"
+                    index=""
                     type="raw"
-                    source="social-media-user-logs"
+                    source=""
                     sourcetype="log4j"
                     messageFormat="json"
                     disableCertificateValidation="true">
