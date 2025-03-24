@@ -43,6 +43,49 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-logging</artifactId>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/com.splunk.logging/splunk-library-javalogging &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>com.splunk.logging</groupId>-->
+<!--			<artifactId>splunk-library-javalogging</artifactId>-->
+<!--			<version>1.8.0</version>-->
+<!--			<scope>runtime</scope>-->
+<!--		</dependency>-->
+
+		<!-- Splunk Logback Appender -->
+
+<!--		<dependency>-->
+<!--			<groupId>com.splunk</groupId>-->
+<!--			<artifactId>splunk-log4j2</artifactId>-->
+<!--			<version>1.6.0</version>-->
+<!--		</dependency>-->
+
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 

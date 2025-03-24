@@ -53,6 +53,7 @@ public class UsersServiceImplementation implements UsersService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
         logger.info("Fetched {} users", userDTOList.size());
+        logger.debug("Fetched {} users from debug", userDTOList.size());
         return new ResponseEntity<>(userDTOList, HttpStatus.OK);
     }
 

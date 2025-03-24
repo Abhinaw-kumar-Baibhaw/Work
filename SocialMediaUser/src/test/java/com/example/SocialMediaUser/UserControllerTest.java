@@ -58,7 +58,7 @@ class UsersControllerTest {
         mockMvc.perform(post("/users/create")
                         .contentType("application/json")
                         .content("{\"name\":\"\", \"email\":\"\", \"password\":\"\"}"))
-                .andExpect(status().isBadRequest());  // Expect HTTP 400 status for invalid input
+                .andExpect(status().isBadRequest());
         verify(usersService, times(0)).createUser(any(Users.class));
     }
 
@@ -69,7 +69,7 @@ class UsersControllerTest {
         when(usersService.getAllUsers()).thenReturn(ResponseEntity.ok(userDTOList));
 
         mockMvc.perform(get("/users/getAll"))
-                .andExpect(status().isOk())  // Expect HTTP 200 status
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Test User"))
                 .andExpect(jsonPath("$[0].email").value("test@example.com"));
 
@@ -80,7 +80,7 @@ class UsersControllerTest {
     void testGetAllUsers_NoContent() throws Exception {
         when(usersService.getAllUsers()).thenReturn(ResponseEntity.noContent().build());
         mockMvc.perform(get("/users/getAll"))
-                .andExpect(status().isNoContent());  // Expect HTTP 204 status
+                .andExpect(status().isNoContent());
         verify(usersService, times(1)).getAllUsers();
     }
 
@@ -112,7 +112,7 @@ class UsersControllerTest {
 
         mockMvc.perform(get("/users/search")
                         .param("email", user.getEmail()))
-                .andExpect(status().isOk())  // Expect HTTP 200 status
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Test User"))
                 .andExpect(jsonPath("$[0].email").value("test@example.com"));
 
@@ -136,7 +136,7 @@ class UsersControllerTest {
 
         mockMvc.perform(get("/users/searchByName")
                         .param("searchByName", user.getName()))
-                .andExpect(status().isOk())  // Expect HTTP 200 status
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Test User"))
                 .andExpect(jsonPath("$[0].email").value("test@example.com"));
 
@@ -148,7 +148,7 @@ class UsersControllerTest {
         when(usersService.searchByRole(eq(user.getRole()))).thenReturn(Arrays.asList(user));
         mockMvc.perform(get("/users/searchByRole")
                         .param("role", user.getRole()))
-                .andExpect(status().isOk())  // Expect HTTP 200 status
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("Test User"))
                 .andExpect(jsonPath("$[0].email").value("test@example.com"));
         verify(usersService, times(1)).searchByRole(user.getRole());

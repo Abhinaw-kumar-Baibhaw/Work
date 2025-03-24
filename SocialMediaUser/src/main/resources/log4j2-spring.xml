@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%style{%d{ISO8601}} %highlight{%-5level} [%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}: %msg%n</Pattern>
+            </PatternLayout>
+        </Console>
+
+        <SplunkHttp name="SOCIALMEDIAUSER"
+                    url="http://localhost:8088"
+                    token="c75d5d47-eb4a-4022-92a2-67c247d775cb"
+                    host="localhost"
+                    index="social_media_user"
+                    type="raw"
+                    source="social-media-user-logs"
+                    sourcetype="log4j"
+                    messageFormat="json"
+                    disableCertificateValidation="true">
+            <PatternLayout>
+                <Pattern>{"event": "%m"}</Pattern>
+            </PatternLayout>
+        </SplunkHttp>
+
+    </Appenders>
+
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="SOCIALMEDIAUSER"/>
+        </Root>
+
+        <Logger name="com.yourcompany.UserService" level="debug">
+            <AppenderRef ref="SOCIALMEDIAUSER"/>
+        </Logger>
+    </Loggers>
+</Configuration>
